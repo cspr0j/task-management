@@ -1,60 +1,85 @@
 package com.task.management.api.controller;
 
-import com.task.management.api.dto.CustomerRegistrationDto;
-import com.task.management.api.dto.LoginDto;
-import com.task.management.api.dto.TaskDto;
-import com.task.management.api.models.Customer;
 import com.task.management.api.models.Task;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Validated
-@Api(
-        value = "customersApi",
-        description = "The Customers API"
-)
+@Tag(name = "Tasks API")
+@RequestMapping("/api/task-management/public/v1/tasks")
 public interface TaskApi {
-    @ApiOperation(
-            response = TaskDto.class,
-            tags = {"customers"},
-            value = "")
-    @ApiResponses({@ApiResponse(
-            code = 200,
-            message = "ОК",
-            response = TaskDto.class
-    )})
+    @Operation(summary = "Create task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Task.class))
+                    })})
     @RequestMapping(
-            value = {"/api/task-management/public/v1/customers/create"},
+            value = {"/create"},
             produces = {"application/json"},
             consumes = {"application/json"},
             method = {RequestMethod.POST}
     )
-    ResponseEntity<TaskDto> signUp(@ApiParam("")
-                                   @RequestBody(required = false)
-                                   @Valid Task requestModel);
+    ResponseEntity<Task> createTask(@Valid Task requestModel);
 
 
-    @ApiOperation(
-            response = String.class,
-            tags = {"customers"},
-            value = "")
-    @ApiResponses({@ApiResponse(
-            code = 200,
-            message = "ОК",
-            response = String.class
-    )})
+    @Operation(summary = "Update task by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Task.class))
+                    })})
     @RequestMapping(
-            value = {"/api/task-management/public/v1/customers/login"},
+            value = {"/{id}"},
             produces = {"application/json"},
             consumes = {"application/json"},
-            method = {RequestMethod.POST}
+            method = {RequestMethod.PUT}
     )
-    ResponseEntity<String> login(@ApiParam("")
-                                 @RequestBody(required = false)
-                                 @Valid LoginDto requestModel);
+    ResponseEntity<Task> updateTask(@PathVariable("id") Long taskId,
+                                    @Valid Task requestModel);
+
+
+    @Operation(summary = "Update task's fields by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Task.class))
+                    })})
+    @RequestMapping(
+            value = {"/{id}"},
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = {RequestMethod.PATCH}
+    )
+    ResponseEntity<Task> updateTaskFields(@PathVariable("id") Long taskId,
+                                          @Valid Task requestModel);
+
+
+    @Operation(summary = "Delete task by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = String.class))
+                    })})
+    @RequestMapping(
+            value = {"/{id}"},
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = {RequestMethod.DELETE}
+    )
+    ResponseEntity<String> deleteTask(@PathVariable("id") Long taskId);
 }

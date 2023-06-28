@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +29,14 @@ public class Task {
     @NotNull
     @Column(name = "description", nullable = false)
     private String description;
+
+    @NotNull
+    @Column(name = "create_date", nullable = false)
+    private LocalDate createDate;
+
+    @NotNull
+    @Column(name = "due_date", nullable = false)
+    private LocalDate dueDate;
 
     //todo write it as enum:
     @NotNull
