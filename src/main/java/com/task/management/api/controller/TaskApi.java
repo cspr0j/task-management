@@ -1,6 +1,7 @@
 package com.task.management.api.controller;
 
-import com.task.management.api.models.Task;
+import com.task.management.api.dto.TaskRequest;
+import com.task.management.api.dto.TaskResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -23,15 +25,16 @@ public interface TaskApi {
             @ApiResponse(responseCode = "200",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Task.class))
-                    })})
+                                    schema = @Schema(implementation = TaskResponse.class))
+                    })
+    })
     @RequestMapping(
             value = {"/create"},
             produces = {"application/json"},
             consumes = {"application/json"},
             method = {RequestMethod.POST}
     )
-    ResponseEntity<Task> createTask(@Valid Task requestModel);
+    ResponseEntity<TaskResponse> createTask(@Valid @RequestBody  TaskRequest requestModel);
 
 
     @Operation(summary = "Update task by its id")
@@ -39,16 +42,17 @@ public interface TaskApi {
             @ApiResponse(responseCode = "200",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Task.class))
-                    })})
+                                    schema = @Schema(implementation = TaskResponse.class))
+                    })
+    })
     @RequestMapping(
             value = {"/{id}"},
             produces = {"application/json"},
             consumes = {"application/json"},
             method = {RequestMethod.PUT}
     )
-    ResponseEntity<Task> updateTask(@PathVariable("id") Long taskId,
-                                    @Valid Task requestModel);
+    ResponseEntity<TaskResponse> updateTask(@PathVariable("id") Long taskId,
+                                            @Valid @RequestBody  TaskRequest requestModel);
 
 
     @Operation(summary = "Update task's fields by its id")
@@ -56,16 +60,17 @@ public interface TaskApi {
             @ApiResponse(responseCode = "200",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Task.class))
-                    })})
+                                    schema = @Schema(implementation = TaskResponse.class))
+                    })
+    })
     @RequestMapping(
             value = {"/{id}"},
             produces = {"application/json"},
             consumes = {"application/json"},
             method = {RequestMethod.PATCH}
     )
-    ResponseEntity<Task> updateTaskFields(@PathVariable("id") Long taskId,
-                                          @Valid Task requestModel);
+    ResponseEntity<TaskResponse> updateTaskFields(@PathVariable("id") Long taskId,
+                                                  @Valid @RequestBody  TaskRequest requestModel);
 
 
     @Operation(summary = "Delete task by its id")
@@ -74,7 +79,8 @@ public interface TaskApi {
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = String.class))
-                    })})
+                    })
+    })
     @RequestMapping(
             value = {"/{id}"},
             produces = {"application/json"},
@@ -82,4 +88,20 @@ public interface TaskApi {
             method = {RequestMethod.DELETE}
     )
     ResponseEntity<String> deleteTask(@PathVariable("id") Long taskId);
+
+    @Operation(summary = "Find Task by criteria")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully found Task by criteria",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TaskResponse.class))
+                    })
+    })
+    @RequestMapping(
+            value = {"/findAdvanced"},
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = {RequestMethod.POST}
+    )
+    ResponseEntity<TaskResponse> findAdvanced(@Valid @RequestBody TaskRequest requestModel);
 }

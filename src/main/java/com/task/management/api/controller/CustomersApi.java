@@ -1,14 +1,13 @@
 package com.task.management.api.controller;
 
-import com.task.management.api.dto.CustomerDto;
-import com.task.management.api.dto.LoginDto;
-import com.task.management.api.models.Customer;
+import com.task.management.api.dto.CustomerRequest;
+import com.task.management.api.dto.CustomerResponse;
+import com.task.management.api.dto.LoginRequest;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,18 +20,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/api/task-management/public/v1/customers")
 public interface CustomersApi {
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the book",
+            @ApiResponse(responseCode = "200", description = "Customer successfully registered",
                     content = {
                     @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Customer.class))
-            })})
+                            schema = @Schema(implementation = CustomerResponse.class))
+            })
+    })
     @RequestMapping(
             value = {"/sign-up"},
             produces = {"application/json"},
             consumes = {"application/json"},
             method = {RequestMethod.POST}
     )
-    ResponseEntity<Customer> signUp(@Valid CustomerDto requestModel);
+    ResponseEntity<CustomerResponse> signUp(@Valid @RequestBody CustomerRequest requestModel);
 
 
     @ApiResponses(value = {
@@ -40,12 +40,13 @@ public interface CustomersApi {
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = String.class))
-                    })})
+                    })
+    })
     @RequestMapping(
             value = {"/login"},
             produces = {"application/json"},
             consumes = {"application/json"},
             method = {RequestMethod.POST}
     )
-    ResponseEntity<String> login(@Valid LoginDto requestModel);
+    ResponseEntity<String> login(@Valid @RequestBody  LoginRequest requestModel);
 }

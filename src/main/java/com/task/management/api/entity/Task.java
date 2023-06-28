@@ -1,4 +1,4 @@
-package com.task.management.api.models;
+package com.task.management.api.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -43,7 +45,8 @@ public class Task {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @NotNull
-    @Column(name = "assignee", nullable = false)
-    private Long assignee;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "customer_id", nullable = false)
+    Customer assignee;
 }
